@@ -38,7 +38,7 @@ html {
 body {
   font-family: 'Jost', sans-serif;
   background: var(--bg-main);
-  background-image: 
+  background-image:
     repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(97, 114, 195, 0.03) 2px, rgba(97, 114, 195, 0.03) 4px),
     repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(97, 114, 195, 0.02) 3px, rgba(97, 114, 195, 0.02) 6px);
   min-height: 100vh;
@@ -47,7 +47,7 @@ body {
 
 /* ─── HEADER ─── */
 .admin-header {
-  background: rgba(255, 255, 255, 0.7);
+  background: linear-gradient(150deg, var(--purple-dark) 0%, var(--purple) 55%, var(--lavender-deep) 100%);
   border-bottom: 1px solid rgba(97, 114, 195, 0.15);
   padding: 1.5rem 2rem;
   display: flex;

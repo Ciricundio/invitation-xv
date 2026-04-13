@@ -73,7 +73,6 @@ body::before {
 
 /* ─── SECTION 1: COVER ─── */
 #cover {
-  background: linear-gradient(160deg, var(--bg-light) 0%, var(--bg-main) 50%, var(--bg-dark) 100%);
   display: flex;
   flex-direction: column;
   align-items: center;

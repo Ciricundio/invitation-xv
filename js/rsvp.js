@@ -1,38 +1,38 @@
 /**
  * rsvp.js
- * Single Responsibility: Handle all RSVP confirmation logic.
+ * Single Responsibility: Handle all RSVP confirmation logic using Supabase backend.
  * Dependency Inversion: Storage is abstracted — uses RSVPStorage internally,
  * so the storage mechanism can be swapped without changing business logic.
  *
  * Public API:
  *   RSVPModule.submitInlineRSVP()   — handles the inline card form submit
  *   RSVPModule.openRSVP()           — opens the section-4 RSVP choices
- *   RSVPModule.confirmRSVP(bool)    — confirms attendance for section-4
+ *   RSVPModule.confirmRSVP(bool)    — confirms attendance for section-4 (visual only)
  *   RSVPModule.launchConfetti()     — confetti animation
  */
 
 const RSVPStorage = (function () {
-  const KEY = 'rsvp_confirmations';
+  const SUPABASE_URL = 'https://qantgbslvdmmwxcrslko.supabase.co/rest/v1/rsvps';
+  const SUPABASE_KEY = 'sb_publishable_L16WcMrIPBo2kuCBRw1xdg_9r_EhIkp';
 
-  function getAll() {
-    try {
-      return JSON.parse(localStorage.getItem(KEY)) || [];
-    } catch {
-      return [];
+  async function save(entry) {
+    const response = await fetch(SUPABASE_URL, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(entry)
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al conectar con la base de datos');
     }
   }
 
-  function save(entry) {
-    const list = getAll();
-    list.push(entry);
-    localStorage.setItem(KEY, JSON.stringify(list));
-  }
-
-  function clear() {
-    localStorage.removeItem(KEY);
-  }
-
-  return { getAll, save, clear };
+  return { save };
 })();
 
 const RSVPModule = (function () {
@@ -55,12 +55,13 @@ const RSVPModule = (function () {
     }
   }
 
-  function submitInlineRSVP() {
+  async function submitInlineRSVP() {
     const nameInput = document.getElementById('inline-rsvp-name');
     const errorEl   = document.getElementById('inline-rsvp-error');
     const formEl    = document.getElementById('inline-rsvp-form');
     const doneEl    = document.getElementById('inline-rsvp-done');
     const doneMsg   = document.getElementById('inline-rsvp-done-msg');
+    const submitBtn = document.querySelector('.inline-rsvp-submit');
 
     if (!nameInput) return;
 
@@ -80,29 +81,44 @@ const RSVPModule = (function () {
     }
     errorEl.style.display = 'none';
 
-    // Save confirmation
-    RSVPStorage.save({
-      name,
-      attending: selectedAttendance === 'yes',
-      timestamp: new Date().toISOString()
-    });
+    try {
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Enviando...';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
 
-    // Show confirmation message
-    const attending = selectedAttendance === 'yes';
-    doneMsg.innerHTML = attending
-      ? `¡Gracias, <strong>${name}</strong>! Te esperamos con mucho amor. 💜`
-      : `Gracias, <strong>${name}</strong>. ¡Te echaremos de menos! 🌸`;
+      // Save confirmation to Supabase
+      await RSVPStorage.save({
+        name,
+        attending: selectedAttendance === 'yes',
+        timestamp: new Date().toISOString()
+      });
 
-    formEl.style.transition = 'opacity 0.4s ease';
-    formEl.style.opacity = '0';
-    setTimeout(() => {
-      formEl.style.display = 'none';
-      doneEl.style.display = 'block';
-      doneEl.classList.add('rsvp-done-visible');
-    }, 380);
+      // Show confirmation message
+      const attending = selectedAttendance === 'yes';
+      doneMsg.innerHTML = attending
+        ? `¡Gracias, <strong>${name}</strong>! Te esperamos con mucho amor. 💜`
+        : `Gracias, <strong>${name}</strong>. ¡Te echaremos de menos! 🌸`;
+
+      formEl.style.transition = 'opacity 0.4s ease';
+      formEl.style.opacity = '0';
+      setTimeout(() => {
+        formEl.style.display = 'none';
+        doneEl.style.display = 'block';
+        doneEl.classList.add('rsvp-done-visible');
+      }, 380);
+
+    } catch (error) {
+      console.error(error);
+      errorEl.textContent = 'Hubo un error de conexión intentando guardar tu registro. Por favor intenta de nuevo.';
+      errorEl.style.display = 'block';
+      submitBtn.textContent = '✦ Confirmar asistencia ✦';
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+    }
   }
 
-  // ── Section-4 RSVP (existing full-card flow) ─────────────────────────
+  // ── Section-4 RSVP (existing full-card flow - VISUAL ONLY) ────────────
   function openRSVP() {
     const init    = document.getElementById('rsvp-init');
     const choices = document.getElementById('rsvp-choices');
@@ -123,29 +139,38 @@ const RSVPModule = (function () {
     const icon       = document.getElementById('confirm-icon');
     const title      = document.getElementById('confirm-title');
     const msg        = document.getElementById('confirm-msg');
+    const heartIcon  = document.getElementById('heart-icon');
+    
     if (!choices || !confirmed) return;
 
-    choices.style.transition = 'opacity 0.3s ease';
-    choices.style.opacity = '0';
+    // Small animation before hiding
+    if (attending && heartIcon) {
+      heartIcon.style.transform = 'scale(1.4)';
+    }
 
     setTimeout(() => {
-      choices.style.display = 'none';
+      choices.style.transition = 'opacity 0.3s ease';
+      choices.style.opacity = '0';
 
-      if (attending) {
-        icon.textContent  = '🎉';
-        title.className   = 'rsvp-confirm-title yes';
-        title.textContent = '¡Qué alegría!';
-        msg.innerHTML     = 'Te esperamos con los brazos abiertos.<br>¡Será una noche <em style="color:var(--gold-light)">inolvidable</em> juntos!';
-        launchConfetti();
-      } else {
-        icon.textContent  = '💌';
-        title.className   = 'rsvp-confirm-title no';
-        title.textContent = 'Gracias por avisarnos';
-        msg.innerHTML     = '¡Te echaremos de menos!<br>Gracias por tomarte el tiempo de responder. 💜';
-      }
+      setTimeout(() => {
+        choices.style.display = 'none';
 
-      confirmed.classList.add('show');
-    }, 280);
+        if (attending) {
+          icon.textContent  = '🎉';
+          title.className   = 'rsvp-confirm-title yes';
+          title.textContent = '¡Qué alegría!';
+          msg.innerHTML     = 'Te esperamos con los brazos abiertos.<br>¡Será una noche <em style="color:var(--gold-light)">inolvidable</em> juntos!';
+          launchConfetti();
+        } else {
+          icon.textContent  = '💌';
+          title.className   = 'rsvp-confirm-title no';
+          title.textContent = 'Gracias por avisarnos';
+          msg.innerHTML     = '¡Te echaremos de menos!<br>Gracias por tomarte el tiempo de responder. 💜';
+        }
+
+        confirmed.classList.add('show');
+      }, 280);
+    }, attending ? 300 : 0);
   }
 
   function launchConfetti() {

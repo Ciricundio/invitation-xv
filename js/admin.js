@@ -1,22 +1,36 @@
 /**
  * admin.js
- * Single Responsibility: Read RSVP data from localStorage and render the admin panel.
+ * Single Responsibility: Read RSVP data from Supabase and render the admin panel.
  * Interface Segregation: Only exposes functions needed by admin.html.
  *
  * Public API:
  *   AdminModule.render()       — renders the confirmations table
  *   AdminModule.exportCSV()    — downloads confirmations as CSV
- *   AdminModule.clearAll()     — clears all confirmations after confirmation
+ *   AdminModule.clearAll()     — clears all confirmations (disabled logic for DB)
  */
 
 const AdminModule = (function () {
-  const STORAGE_KEY = 'rsvp_confirmations';
+  const SUPABASE_URL = 'https://qantgbslvdmmwxcrslko.supabase.co/rest/v1/rsvps?order=timestamp.desc';
+  const SUPABASE_KEY = 'sb_publishable_L16WcMrIPBo2kuCBRw1xdg_9r_EhIkp';
+
+  let currentConfirmations = [];
 
   // ── Storage read ──────────────────────────────────────────────────────
-  function getConfirmations() {
+  async function fetchConfirmations() {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
+      const response = await fetch(SUPABASE_URL, {
+        method: 'GET',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Error al leer de la base de datos');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(error);
       return [];
     }
   }
@@ -35,8 +49,19 @@ const AdminModule = (function () {
   }
 
   // ── Render ────────────────────────────────────────────────────────────
-  function render() {
-    const list = getConfirmations();
+  async function render() {
+    const tbody = document.getElementById('admin-tbody');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="admin-empty" style="padding:4rem 0;">
+            <div style="opacity: 0.6; animation: pulse 1.5s infinite">Cargando base de datos global...</div>
+          </td>
+        </tr>`;
+    }
+
+    const list = await fetchConfirmations();
+    currentConfirmations = list;
 
     // Summary counters
     const total     = list.length;
@@ -48,23 +73,20 @@ const AdminModule = (function () {
     document.getElementById('admin-absent').textContent   = notAttend;
 
     // Table body
-    const tbody = document.getElementById('admin-tbody');
     if (!tbody) return;
 
     if (total === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="3" class="admin-empty">
+          <td colspan="4" class="admin-empty">
             <span>🌸</span><br>
-            Aún no hay confirmaciones registradas.
+            Aún no hay confirmaciones registradas en línea.
           </td>
         </tr>`;
       return;
     }
 
     tbody.innerHTML = list
-      .slice()
-      .reverse() // most recent first
       .map((r, i) => `
         <tr class="admin-row ${r.attending ? 'row-yes' : 'row-no'}">
           <td class="admin-td admin-td-num">${total - i}</td>
@@ -80,6 +102,7 @@ const AdminModule = (function () {
   }
 
   function escapeHtml(str) {
+    if (!str) return '';
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -89,7 +112,7 @@ const AdminModule = (function () {
 
   // ── Export CSV ────────────────────────────────────────────────────────
   function exportCSV() {
-    const list = getConfirmations();
+    const list = currentConfirmations;
     if (list.length === 0) {
       alert('No hay confirmaciones para exportar.');
       return;
@@ -114,23 +137,46 @@ const AdminModule = (function () {
   }
 
   // ── Clear all ─────────────────────────────────────────────────────────
+  // Note: Para bases de datos en la nube, es peligroso borrar
+  // todo desde un panel sin autenticación. Por ahora, redirigimos
+  // al usuario para que elimine los registros directamente en Supabase.
   function clearAll() {
     const confirmDialog = document.getElementById('admin-confirm-dialog');
+    
+    // Changing the content dynamically to adapt to Supabase rule
+    const dialogTitle = document.getElementById('admin-dialog-title') || document.querySelector('.admin-dialog-title');
+    const dialogMsg = document.getElementById('admin-dialog-msg') || document.querySelector('.admin-dialog-msg');
+    const btnYes = document.querySelector('.admin-btn-confirm-yes');
+
+    if (dialogTitle) dialogTitle.textContent = "Aviso de Seguridad";
+    if (dialogMsg) dialogMsg.innerHTML = "Por tu propia seguridad, las confirmaciones guardadas en la base de datos (Supabase) solo se pueden eliminar manualmente desde la consola de Supabase.com.<br><br>Esto previene que borres accidentalmente la información de tus invitados.";
+    
+    if (btnYes) {
+        btnYes.textContent = "Entendido";
+        btnYes.onclick = cancelClear; // Rebind to simply dismiss
+    }
+
     confirmDialog.style.display = 'flex';
   }
 
-  function confirmClear() {
-    localStorage.removeItem(STORAGE_KEY);
-    document.getElementById('admin-confirm-dialog').style.display = 'none';
-    render();
-  }
-
   function cancelClear() {
-    document.getElementById('admin-confirm-dialog').style.display = 'none';
+    const confirmDialog = document.getElementById('admin-confirm-dialog');
+    if (confirmDialog) confirmDialog.style.display = 'none';
   }
 
-  return { render, exportCSV, clearAll, confirmClear, cancelClear };
+  return { render, exportCSV, clearAll, confirmClear: cancelClear, cancelClear };
 })();
+
+// Add simple CSS animation for the loading text dynamically
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+`;
+document.head.appendChild(style);
 
 // Init on DOM ready
 document.addEventListener('DOMContentLoaded', () => {

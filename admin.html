@@ -1,102 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<title>Administración — XV Años Mariana</title>
-<link rel="stylesheet" href="css/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administración — XV Años Maria José</title>
+  <link rel="stylesheet" href="css/admin.css">
 </head>
+
 <body>
 
-<!-- ─── HEADER ─── -->
-<header class="admin-header">
-  <div class="admin-header-brand">
-    <span class="admin-header-eyebrow">✦ Panel de administración ✦</span>
-    <div class="admin-header-title">Confirmaciones de Asistencia</div>
-    <div class="admin-header-name">XV Años · Mariana Pérez</div>
-  </div>
-  <div class="admin-header-actions">
-    <button class="admin-btn admin-btn-export" onclick="AdminModule.exportCSV()">
-      ⬇ Exportar CSV
-    </button>
-    <button class="admin-btn admin-btn-clear" onclick="AdminModule.clearAll()">
-      🗑 Limpiar todo
-    </button>
-    <a href="index.html" class="admin-btn admin-btn-back">
-      ← Volver
-    </a>
-  </div>
-</header>
-
-<!-- ─── MAIN ─── -->
-<main class="admin-main">
-
-  <!-- Summary cards -->
-  <div class="admin-summary">
-    <div class="admin-stat-card">
-      <div class="admin-stat-value" id="admin-total">0</div>
-      <div class="admin-stat-label">Total confirmados</div>
+  <!-- ─── HEADER ─── -->
+  <header class="admin-header">
+    <div class="admin-header-brand">
+      <span class="admin-header-eyebrow">✦ Panel de administración ✦</span>
+      <div class="admin-header-title">Confirmaciones de Asistencia</div>
+      <div class="admin-header-name">XV Años · Maria José Cárdenas Contreras</div>
     </div>
-    <div class="admin-stat-card">
-      <div class="admin-stat-value" id="admin-attending">0</div>
-      <div class="admin-stat-label">Asistirán ✅</div>
+    <div class="admin-header-actions">
+      <button class="admin-btn admin-btn-export" onclick="AdminModule.exportCSV()">
+        ⬇ Exportar CSV
+      </button>
+      <button class="admin-btn admin-btn-clear" onclick="AdminModule.clearAll()">
+        🗑 Limpiar todo
+      </button>
+      <a href="index.html" class="admin-btn admin-btn-back">
+        ← Volver
+      </a>
     </div>
-    <div class="admin-stat-card">
-      <div class="admin-stat-value" id="admin-absent">0</div>
-      <div class="admin-stat-label">No asistirán ❌</div>
-    </div>
-  </div>
+  </header>
 
-  <!-- Confirmations table -->
-  <div class="admin-table-wrap">
-    <div class="admin-table-header">
-      <div>
-        <div class="admin-table-title">Lista de Invitados</div>
-        <div class="admin-table-subtitle">Ordenado por más reciente</div>
+  <!-- ─── MAIN ─── -->
+  <main class="admin-main">
+
+    <!-- Summary cards -->
+    <div class="admin-summary">
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="admin-total">0</div>
+        <div class="admin-stat-label">Total confirmados</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="admin-attending">0</div>
+        <div class="admin-stat-label">Asistirán ✅</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-value" id="admin-absent">0</div>
+        <div class="admin-stat-label">No asistirán ❌</div>
       </div>
     </div>
 
-    <table aria-label="Tabla de confirmaciones de asistencia">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Asistencia</th>
-          <th>Fecha y Hora</th>
-        </tr>
-      </thead>
-      <tbody id="admin-tbody">
-        <!-- Rendered by admin.js -->
-      </tbody>
-    </table>
-  </div>
+    <!-- Confirmations table -->
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <div>
+          <div class="admin-table-title">Lista de Invitados</div>
+          <div class="admin-table-subtitle">Ordenado por más reciente</div>
+        </div>
+      </div>
 
-</main>
+      <table aria-label="Tabla de confirmaciones de asistencia">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Asistencia</th>
+            <th>Fecha y Hora</th>
+          </tr>
+        </thead>
+        <tbody id="admin-tbody">
+          <!-- Rendered by admin.js -->
+        </tbody>
+      </table>
+    </div>
 
-<!-- ─── CONFIRM CLEAR DIALOG ─── -->
-<div class="admin-confirm-dialog" id="admin-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-  <div class="admin-dialog-box">
-    <span class="admin-dialog-icon">⚠️</span>
-    <div class="admin-dialog-title" id="dialog-title">¿Borrar todas las confirmaciones?</div>
-    <p class="admin-dialog-msg">
-      Esta acción eliminará permanentemente todos los datos de confirmación.
-      No se puede deshacer.
-    </p>
-    <div class="admin-dialog-btns">
-      <button class="admin-btn admin-btn-confirm-yes" onclick="AdminModule.confirmClear()">
-        Sí, borrar todo
-      </button>
-      <button class="admin-btn admin-btn-confirm-no" onclick="AdminModule.cancelClear()">
-        Cancelar
-      </button>
+  </main>
+
+  <!-- ─── CONFIRM CLEAR DIALOG ─── -->
+  <div class="admin-confirm-dialog" id="admin-confirm-dialog" role="dialog" aria-modal="true"
+    aria-labelledby="dialog-title">
+    <div class="admin-dialog-box">
+      <span class="admin-dialog-icon">⚠️</span>
+      <div class="admin-dialog-title" id="dialog-title">¿Borrar todas las confirmaciones?</div>
+      <p class="admin-dialog-msg">
+        Esta acción eliminará permanentemente todos los datos de confirmación.
+        No se puede deshacer.
+      </p>
+      <div class="admin-dialog-btns">
+        <button class="admin-btn admin-btn-confirm-yes" onclick="AdminModule.confirmClear()">
+          Sí, borrar todo
+        </button>
+        <button class="admin-btn admin-btn-confirm-no" onclick="AdminModule.cancelClear()">
+          Cancelar
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ─── FOOTER ─── -->
-<footer class="admin-footer">Con todo nuestro amor ♡</footer>
+  <!-- ─── FOOTER ─── -->
+  <footer class="admin-footer">Con todo nuestro amor ♡</footer>
 
-<script src="js/admin.js"></script>
+  <script src="js/admin.js"></script>
 </body>
+
 </html>

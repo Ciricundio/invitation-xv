@@ -37,6 +37,33 @@ const RSVPStorage = (function () {
 
 const RSVPModule = (function () {
 
+  // ── Welcome Gate ───────────────────────────────────────────────────────
+  function unlockInvitation() {
+    const gateInput = document.getElementById('gate-name-input');
+    const gateError = document.getElementById('gate-error');
+    const gateObj = document.getElementById('welcome-gate');
+    
+    if (!gateInput) return;
+    
+    const name = gateInput.value.trim();
+    if (!name) {
+      gateError.style.display = 'block';
+      gateInput.focus();
+      return;
+    }
+    
+    // Propagate name to the hidden RSVP form
+    const rsvpNameInput = document.getElementById('inline-rsvp-name');
+    if (rsvpNameInput) {
+      rsvpNameInput.value = name;
+    }
+    
+    // Hide gate & unlock body scroll
+    gateError.style.display = 'none';
+    gateObj.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
   // ── Inline RSVP (inside the details card, Section 2) ─────────────────
   let selectedAttendance = null; // 'yes' | 'no'
 
@@ -67,6 +94,9 @@ const RSVPModule = (function () {
 
     const name = nameInput.value.trim();
 
+    const companionsInput = document.getElementById('inline-rsvp-companions');
+    const numCompanions = companionsInput ? parseInt(companionsInput.value, 10) || 0 : 0;
+
     // Validation
     if (!name) {
       errorEl.textContent = 'Por favor escribe tu nombre.';
@@ -90,6 +120,7 @@ const RSVPModule = (function () {
       // Save confirmation to Supabase
       await RSVPStorage.save({
         name,
+        companions: numCompanions,
         attending: selectedAttendance === 'yes',
         timestamp: new Date().toISOString()
       });
@@ -195,5 +226,5 @@ const RSVPModule = (function () {
     setTimeout(() => container.innerHTML = '', 4000);
   }
 
-  return { selectAttendance, submitInlineRSVP, openRSVP, confirmRSVP, launchConfetti };
+  return { unlockInvitation, selectAttendance, submitInlineRSVP, openRSVP, confirmRSVP, launchConfetti };
 })();

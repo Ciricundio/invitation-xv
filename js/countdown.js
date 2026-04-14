@@ -6,7 +6,7 @@
  */
 
 (function CountdownModule() {
-  const EVENT_DATE = new Date('2025-06-14T19:00:00');
+  const EVENT_DATE = new Date('2026-09-26T19:00:00');
 
   function pad(n) {
     return String(n).padStart(2, '0');

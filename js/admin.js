@@ -54,7 +54,7 @@ const AdminModule = (function () {
     if (tbody) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="4" class="admin-empty" style="padding:4rem 0;">
+          <td colspan="5" class="admin-empty" style="padding:4rem 0;">
             <div style="opacity: 0.6; animation: pulse 1.5s infinite">Cargando base de datos global...</div>
           </td>
         </tr>`;
@@ -78,7 +78,7 @@ const AdminModule = (function () {
     if (total === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="4" class="admin-empty">
+          <td colspan="5" class="admin-empty">
             <span>🌸</span><br>
             Aún no hay confirmaciones registradas en línea.
           </td>
@@ -96,6 +96,7 @@ const AdminModule = (function () {
               ${r.attending ? '✅ Asistiré' : '❌ No podré'}
             </span>
           </td>
+          <td class="admin-td" style="color:var(--text-soft); font-weight:500;">+${r.companions || 0}</td>
           <td class="admin-td admin-td-date">${formatDate(r.timestamp)}</td>
         </tr>`)
       .join('');
@@ -118,11 +119,12 @@ const AdminModule = (function () {
       return;
     }
 
-    const header = ['#', 'Nombre', 'Asistencia', 'Fecha y Hora'];
+    const header = ['#', 'Nombre', 'Asistencia', 'Acompañantes', 'Fecha y Hora'];
     const rows = list.map((r, i) => [
       i + 1,
       `"${r.name.replace(/"/g, '""')}"`,
       r.attending ? 'Sí' : 'No',
+      r.companions || 0,
       `"${formatDate(r.timestamp)}"`
     ]);
 

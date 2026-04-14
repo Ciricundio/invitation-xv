@@ -1,14 +1,18 @@
-26/septiembre 7pm
+- La primera vista del usuario debe ser la siguiente:
+    El usuario debe diligenciar obligatoriamente su nombre original,
+    para identificarlo y darle la invitación presionado
 
-Juan Manuel cardenas
-Alba Luz Contreras
+- La fecha del evento es el 26/septiembre 7pm, teniendo en cuenta el
+día coloca a funcionar el reloj de cuenta regresiva.
 
-Color reservado Azul Rey
+- Padres: Juan Manuel cardenas y Alba Luz Contreras
 
-Sin programación de noche
+- Color reservado Azul Rey
 
-Lluvia de sobres
+- Quitar la programación de la noche
 
-24 de septiembre como fecha limite de confirmación de asistencia.
+- Tipo de regalo: Lluvia de sobres
 
-colocar la cantidad de acompañantes en la confirmación de asistencia.
+- 24 de septiembre como fecha limite de confirmación de asistencia.
+
+- Colocar la cantidad de acompañantes en la confirmación de asistencia.

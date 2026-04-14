@@ -5,12 +5,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Invitación a los XV Años de Maria José Cárdenas Contreras — Sábado 14 de Junio, 2025. Salón Versailles, La Jagua.">
+    content="Invitación a los XV Años de Maria José Cárdenas Contreras — Sábado 26 de Septiembre, 2026. Salón Versailles, La Jagua.">
   <title>Mis XV Años — Maria José Cárdenas Contreras</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+<body style="overflow: hidden;"> <!-- Start locked until welcome gate clears -->
+
+  <!-- Welcome Gate Overlay -->
+  <div class="welcome-gate" id="welcome-gate">
+    <div class="welcome-gate-content">
+      <div class="welcome-gate-icon">✨</div>
+      <div class="welcome-gate-title">Bienvenido a mi invitación</div>
+      <p class="welcome-gate-text">Por favor ingresa tu nombre completo para acceder a la invitación.</p>
+      <div class="welcome-gate-form">
+        <input type="text" id="gate-name-input" class="inline-rsvp-name-input" style="text-align:center;"
+          placeholder="Tu nombre..." autocomplete="name">
+        <p id="gate-error" style="display:none;color:#ff6b6b;font-size:0.75rem;margin-bottom:0.8rem;font-style:italic;">
+          Debes ingresar tu nombre.</p>
+        <button type="button" class="inline-rsvp-submit" onclick="RSVPModule.unlockInvitation()">✦ Abrir Invitación
+          ✦</button>
+      </div>
+    </div>
+  </div>
 
   <div class="stack-wrapper">
 
@@ -151,8 +168,7 @@
       <div class="details-card">
         <span class="section-tag">✦ Con alegría y amor ✦</span>
 
-        <p class="parents-title">Sus padres</p>
-        <p class="parents-names">Roberto Cárdenas Contreras<br>&amp; Laura García</p>
+        <p class="parents-names">Juan Manuel Cardenas<br>&amp; Alba Luz Contreras</p>
 
         <div class="details-divider"></div>
 
@@ -167,7 +183,7 @@
           <div class="detail-item">
             <span class="detail-icon">🗓️</span>
             <div class="detail-label">Fecha</div>
-            <div class="detail-value">Sábado<br>14 de Junio, 2025</div>
+            <div class="detail-value">Sábado<br>26 de Septiembre, 2026</div>
           </div>
           <div class="detail-item">
             <span class="detail-icon">🕐</span>
@@ -196,8 +212,16 @@
           <!-- Form state -->
           <div id="inline-rsvp-form">
             <input type="text" id="inline-rsvp-name" class="inline-rsvp-name-input" placeholder="Tu nombre completo…"
-              maxlength="80" autocomplete="name">
+              maxlength="80" autocomplete="name" readonly
+              style="background: rgba(255, 255, 255, 0.4); color: var(--text-mid); cursor: not-allowed;">
 
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+              <label for="inline-rsvp-companions"
+                style="font-size:0.8rem; font-weight:300; letter-spacing:0.1em; color:var(--text-dark);">Acompañantes
+                adicionales:</label>
+              <input type="number" id="inline-rsvp-companions" class="inline-rsvp-name-input"
+                style="margin-bottom:0; width:60px; padding:0.5rem; text-align:center;" min="0" max="10" value="0">
+            </div>
             <div class="inline-rsvp-toggle-group">
               <button id="inline-rsvp-yes" class="inline-rsvp-toggle" onclick="RSVPModule.selectAttendance('yes')"
                 type="button">
@@ -280,55 +304,11 @@
           </div>
         </div>
 
-        <!-- Itinerary -->
-        <p class="itinerary-title">Programa de la Noche</p>
-
-        <div class="itinerary-list">
-          <div class="itinerary-item" id="it-0">
-            <div class="itinerary-icon-wrap">🌸</div>
-            <div class="itinerary-content">
-              <div class="itinerary-time">7:00 PM</div>
-              <div class="itinerary-event">Recepción</div>
-              <div class="itinerary-desc">Bienvenida y coctel de bienvenida</div>
-            </div>
-          </div>
-          <div class="itinerary-item" id="it-1">
-            <div class="itinerary-icon-wrap">👑</div>
-            <div class="itinerary-content">
-              <div class="itinerary-time">8:00 PM</div>
-              <div class="itinerary-event">Entrada de la Quinceañera</div>
-              <div class="itinerary-desc">El gran momento de Maria José</div>
-            </div>
-          </div>
-          <div class="itinerary-item" id="it-2">
-            <div class="itinerary-icon-wrap">🥂</div>
-            <div class="itinerary-content">
-              <div class="itinerary-time">8:30 PM</div>
-              <div class="itinerary-event">Brindis y Cena</div>
-              <div class="itinerary-desc">Palabras de los padres y cena de gala</div>
-            </div>
-          </div>
-          <div class="itinerary-item" id="it-3">
-            <div class="itinerary-icon-wrap">🎂</div>
-            <div class="itinerary-content">
-              <div class="itinerary-time">10:00 PM</div>
-              <div class="itinerary-event">Pastel &amp; Vals</div>
-              <div class="itinerary-desc">El primer vals de quinceañera</div>
-            </div>
-          </div>
-          <div class="itinerary-item" id="it-4">
-            <div class="itinerary-icon-wrap">🎶</div>
-            <div class="itinerary-content">
-              <div class="itinerary-time">10:30 PM</div>
-              <div class="itinerary-event">¡A Bailar!</div>
-              <div class="itinerary-desc">Música, baile y mucha alegría</div>
-            </div>
-          </div>
-        </div>
+        <!-- Itinerary removed as requested -->
 
         <div style="text-align:center;margin-top:1rem">
           <div class="dresscode-pill">
-            👗 Código de vestimenta: Formal · Colores pasteles
+            👗 Código de vestimenta: Formal · Color reservado Azul Rey
           </div>
         </div>
       </div>
@@ -362,16 +342,11 @@
 
         <!-- Gifts -->
         <div class="gifts-card">
-          <span class="gifts-emoji">🎁</span>
-          <div class="gifts-title">Sugerencia de Regalos</div>
-          <p class="gifts-text">
+          <span class="gifts-emoji">✉️</span>
+          <div class="gifts-title">Lluvia de Sobres</div>
+          <p class="gifts-text" style="margin-top:1.5rem;font-size:0.85rem">
             Tu presencia es el mejor regalo.<br>
-            Si deseas obsequiarme algo, puedes contribuir a mi
-          </p>
-          <div class="gifts-highlight">Mesa de Regalos</div>
-          <p class="gifts-text" style="margin-top:1rem;font-size:0.78rem">
-            O bien, un aporte a mi fondo de educación<br>
-            será profundamente apreciado con todo mi corazón. 💜
+            Si deseas obsequiarme algo, lo recibiré con mucho cariño en mi lluvia de sobres. 💜
           </p>
         </div>
 
@@ -383,7 +358,7 @@
             <h3 class="rsvp-title">Confirmar Asistencia</h3>
             <p class="rsvp-subtitle">
               Por favor confírmanos tu presencia antes del<br>
-              <strong style="color:var(--gold-light);font-weight:400">1 de Junio de 2025</strong>
+              <strong style="color:var(--gold-light);font-weight:400">24 de Septiembre</strong>
             </p>
             <button class="rsvp-btn-main" onclick="RSVPModule.openRSVP()">
               <span>💌</span>
@@ -422,8 +397,6 @@
         </div>
 
         <div class="footer-note">Con todo nuestro amor ♡</div>
-        <!-- Admin access link (subtle) -->
-        <a href="admin.html" class="admin-link">administración</a>
       </div>
     </section>
 

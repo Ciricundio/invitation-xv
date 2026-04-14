@@ -1,18 +1,22 @@
-- La primera vista del usuario debe ser la siguiente:
-    El usuario debe diligenciar obligatoriamente su nombre original,
-    para identificarlo y darle la invitación presionado
+- Agregar un marco de flores en la página de invitación.
 
-- La fecha del evento es el 26/septiembre 7pm, teniendo en cuenta el
-día coloca a funcionar el reloj de cuenta regresiva.
+- Quitar details-card porque el diseño no es coherente 
+con el resto de la página, dejar el resto de contenido.
 
-- Padres: Juan Manuel cardenas y Alba Luz Contreras
+- Este formulario no me gusta inline-rsvp-form, es mejor que 
+sea el último quien funcione para dar la información 
+a la base de datos, sin embargo le hace falta 
+funcionalidades como la cantidad de acompañantes, El fujo va
+va hacer confirmar asistencia, si dice que si, entonces 
+mostrar el formulario para llenar la información de los 
+acompañantes, si dice que no, entonces mostrar un mensaje 
+de agradecimiento y no mostrar el formulario.
 
-- Color reservado Azul Rey
+- Las letras de código de vestimenta no se ven bien, 
+necesito que se vean mejor.
 
-- Quitar la programación de la noche
+- Agregar la información de fecha, hora y lugar con estilo
+linetime coherente al diseño de la página.
 
-- Tipo de regalo: Lluvia de sobres
-
-- 24 de septiembre como fecha limite de confirmación de asistencia.
-
-- Colocar la cantidad de acompañantes en la confirmación de asistencia.
+- Mejora el diseño de la foto de la sección de la galería, 
+necesito que se vea mejor.

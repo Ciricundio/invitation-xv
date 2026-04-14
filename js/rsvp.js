@@ -1,14 +1,6 @@
 /**
  * rsvp.js
  * Single Responsibility: Handle all RSVP confirmation logic using Supabase backend.
- * Dependency Inversion: Storage is abstracted — uses RSVPStorage internally,
- * so the storage mechanism can be swapped without changing business logic.
- *
- * Public API:
- *   RSVPModule.submitInlineRSVP()   — handles the inline card form submit
- *   RSVPModule.openRSVP()           — opens the section-4 RSVP choices
- *   RSVPModule.confirmRSVP(bool)    — confirms attendance for section-4 (visual only)
- *   RSVPModule.launchConfetti()     — confetti animation
  */
 
 const RSVPStorage = (function () {
@@ -37,6 +29,9 @@ const RSVPStorage = (function () {
 
 const RSVPModule = (function () {
 
+  // Global user name from the gate
+  let guestName = '';
+
   // ── Welcome Gate ───────────────────────────────────────────────────────
   function unlockInvitation() {
     const gateInput = document.getElementById('gate-name-input');
@@ -52,10 +47,12 @@ const RSVPModule = (function () {
       return;
     }
     
+    guestName = name;
+    
     // Propagate name to the hidden RSVP form
-    const rsvpNameInput = document.getElementById('inline-rsvp-name');
-    if (rsvpNameInput) {
-      rsvpNameInput.value = name;
+    const rsvpNameDisplay = document.getElementById('final-rsvp-name-display');
+    if (rsvpNameDisplay) {
+      rsvpNameDisplay.textContent = name;
     }
     
     // Hide gate & unlock body scroll
@@ -64,92 +61,7 @@ const RSVPModule = (function () {
     document.body.style.overflow = '';
   }
 
-  // ── Inline RSVP (inside the details card, Section 2) ─────────────────
-  let selectedAttendance = null; // 'yes' | 'no'
-
-  function selectAttendance(choice) {
-    selectedAttendance = choice;
-    const btnYes = document.getElementById('inline-rsvp-yes');
-    const btnNo  = document.getElementById('inline-rsvp-no');
-    if (!btnYes || !btnNo) return;
-
-    if (choice === 'yes') {
-      btnYes.classList.add('selected');
-      btnNo.classList.remove('selected');
-    } else {
-      btnNo.classList.add('selected');
-      btnYes.classList.remove('selected');
-    }
-  }
-
-  async function submitInlineRSVP() {
-    const nameInput = document.getElementById('inline-rsvp-name');
-    const errorEl   = document.getElementById('inline-rsvp-error');
-    const formEl    = document.getElementById('inline-rsvp-form');
-    const doneEl    = document.getElementById('inline-rsvp-done');
-    const doneMsg   = document.getElementById('inline-rsvp-done-msg');
-    const submitBtn = document.querySelector('.inline-rsvp-submit');
-
-    if (!nameInput) return;
-
-    const name = nameInput.value.trim();
-
-    const companionsInput = document.getElementById('inline-rsvp-companions');
-    const numCompanions = companionsInput ? parseInt(companionsInput.value, 10) || 0 : 0;
-
-    // Validation
-    if (!name) {
-      errorEl.textContent = 'Por favor escribe tu nombre.';
-      errorEl.style.display = 'block';
-      nameInput.focus();
-      return;
-    }
-    if (!selectedAttendance) {
-      errorEl.textContent = 'Por favor selecciona si asistirás o no.';
-      errorEl.style.display = 'block';
-      return;
-    }
-    errorEl.style.display = 'none';
-
-    try {
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Enviando...';
-      submitBtn.disabled = true;
-      submitBtn.style.opacity = '0.7';
-
-      // Save confirmation to Supabase
-      await RSVPStorage.save({
-        name,
-        companions: numCompanions,
-        attending: selectedAttendance === 'yes',
-        timestamp: new Date().toISOString()
-      });
-
-      // Show confirmation message
-      const attending = selectedAttendance === 'yes';
-      doneMsg.innerHTML = attending
-        ? `¡Gracias, <strong>${name}</strong>! Te esperamos con mucho amor. 💜`
-        : `Gracias, <strong>${name}</strong>. ¡Te echaremos de menos! 🌸`;
-
-      formEl.style.transition = 'opacity 0.4s ease';
-      formEl.style.opacity = '0';
-      setTimeout(() => {
-        formEl.style.display = 'none';
-        doneEl.style.display = 'block';
-        doneEl.classList.add('rsvp-done-visible');
-      }, 380);
-
-    } catch (error) {
-      console.error(error);
-      errorEl.textContent = 'Hubo un error de conexión intentando guardar tu registro. Por favor intenta de nuevo.';
-      errorEl.style.display = 'block';
-      submitBtn.textContent = '✦ Confirmar asistencia ✦';
-      submitBtn.disabled = false;
-      submitBtn.style.opacity = '1';
-    }
-  }
-
-  // ── Section-4 RSVP (existing full-card flow - VISUAL ONLY) ────────────
+  // ── Section-4 RSVP (The real flow now) ────────────
   function openRSVP() {
     const init    = document.getElementById('rsvp-init');
     const choices = document.getElementById('rsvp-choices');
@@ -164,44 +76,86 @@ const RSVPModule = (function () {
     }, 380);
   }
 
-  function confirmRSVP(attending) {
+  async function confirmRSVP(attending) {
     const choices    = document.getElementById('rsvp-choices');
     const confirmed  = document.getElementById('rsvp-confirmed');
     const icon       = document.getElementById('confirm-icon');
     const title      = document.getElementById('confirm-title');
     const msg        = document.getElementById('confirm-msg');
-    const heartIcon  = document.getElementById('heart-icon');
     
-    if (!choices || !confirmed) return;
-
-    // Small animation before hiding
-    if (attending && heartIcon) {
-      heartIcon.style.transform = 'scale(1.4)';
+    if (attending) {
+      // Transition to companions form instead of finalizing directly
+      const rsvpForm = document.getElementById('rsvp-companions-form');
+      choices.style.display = 'none';
+      rsvpForm.style.display = 'block';
+      setTimeout(() => rsvpForm.style.opacity = '1', 50);
+      return;
     }
 
-    setTimeout(() => {
-      choices.style.transition = 'opacity 0.3s ease';
-      choices.style.opacity = '0';
+    // NO ATTENDING FLOW
+    try {
+      choices.style.pointerEvents = 'none';
+      choices.style.opacity = '0.5';
 
-      setTimeout(() => {
-        choices.style.display = 'none';
+      await RSVPStorage.save({
+        name: guestName,
+        companions: 0,
+        attending: false,
+        timestamp: new Date().toISOString()
+      });
 
-        if (attending) {
-          icon.textContent  = '🎉';
-          title.className   = 'rsvp-confirm-title yes';
-          title.textContent = '¡Qué alegría!';
-          msg.innerHTML     = 'Te esperamos con los brazos abiertos.<br>¡Será una noche <em style="color:var(--gold-light)">inolvidable</em> juntos!';
-          launchConfetti();
-        } else {
-          icon.textContent  = '💌';
-          title.className   = 'rsvp-confirm-title no';
-          title.textContent = 'Gracias por avisarnos';
-          msg.innerHTML     = '¡Te echaremos de menos!<br>Gracias por tomarte el tiempo de responder. 💜';
-        }
+      choices.style.display = 'none';
+      
+      icon.textContent  = '💌';
+      title.className   = 'rsvp-confirm-title no';
+      title.textContent = 'Gracias por avisarnos';
+      msg.innerHTML     = '¡Te echaremos de menos!<br>Gracias por tomarte el tiempo de responder. 💜';
+      
+      confirmed.classList.add('show');
+    } catch (e) {
+      alert("Hubo un error de conexión intentando registrar tu respuesta. Intenta nuevamente.");
+      choices.style.pointerEvents = 'auto';
+      choices.style.opacity = '1';
+    }
+  }
 
-        confirmed.classList.add('show');
-      }, 280);
-    }, attending ? 300 : 0);
+  async function submitCompanions() {
+    const input = document.getElementById('final-rsvp-companions');
+    const btn = document.getElementById('final-rsvp-submit-btn');
+    const form = document.getElementById('rsvp-companions-form');
+    const confirmed  = document.getElementById('rsvp-confirmed');
+    
+    const icon       = document.getElementById('confirm-icon');
+    const title      = document.getElementById('confirm-title');
+    const msg        = document.getElementById('confirm-msg');
+
+    const numCompanions = input ? parseInt(input.value, 10) || 0 : 0;
+
+    try {
+      btn.textContent = 'Guardando...';
+      btn.disabled = true;
+
+      await RSVPStorage.save({
+        name: guestName,
+        companions: numCompanions,
+        attending: true,
+        timestamp: new Date().toISOString()
+      });
+
+      form.style.display = 'none';
+
+      icon.textContent  = '🎉';
+      title.className   = 'rsvp-confirm-title yes';
+      title.textContent = '¡Asistencia Confirmada!';
+      msg.innerHTML     = '¡Qué alegría! Te esperamos con los brazos abiertos para celebrar una gran noche.';
+      
+      confirmed.classList.add('show');
+      launchConfetti();
+    } catch (e) {
+      alert("Hubo un error de conexión intentando registrar tu asistencia. Intenta nuevamente.");
+      btn.textContent = 'Confirmar mi asistencia';
+      btn.disabled = false;
+    }
   }
 
   function launchConfetti() {
@@ -226,5 +180,5 @@ const RSVPModule = (function () {
     setTimeout(() => container.innerHTML = '', 4000);
   }
 
-  return { unlockInvitation, selectAttendance, submitInlineRSVP, openRSVP, confirmRSVP, launchConfetti };
+  return { unlockInvitation, openRSVP, confirmRSVP, submitCompanions, launchConfetti };
 })();

@@ -245,6 +245,78 @@ body::before {
   opacity: 0.18;
 }
 
+/* ─── GLOBAL FIXED FLORAL FRAME ─── */
+.global-floral-frame {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50; /* Over the content but under gate */
+  overflow: hidden;
+}
+
+.flor {
+  position: absolute;
+  width: clamp(230px, 40vw, 320px); /* Hecho mucho más grande */
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+  transition: transform 0.5s ease;
+}
+
+/* Construyendo el marco arriba (12 flores simétricas) */
+/* Nivel trasero (más arriba para tapar fondo por completo) */
+.flor-top-1 { top: -140px; left: -80px; transform: rotate(135deg) scale(1.3); z-index: 1; }
+.flor-top-2 { top: -150px; left: 15%; transform: rotate(160deg) scale(1.2); z-index: 1; }
+.flor-top-3 { top: -160px; left: 40%; transform: rotate(185deg) scale(1.2); z-index: 1; }
+
+.flor-top-4 { top: -160px; right: 40%; transform: scaleX(-1) rotate(185deg) scale(1.2); z-index: 1; }
+.flor-top-5 { top: -150px; right: 15%; transform: scaleX(-1) rotate(160deg) scale(1.2); z-index: 1; }
+.flor-top-6 { top: -140px; right: -80px; transform: scaleX(-1) rotate(135deg) scale(1.3); z-index: 1; }
+
+/* Nivel delantero (cuelgan por debajo para volumen) */
+.flor-top-7 { top: -90px; left: -10px; transform: rotate(110deg) scale(0.9); z-index: 2; }
+.flor-top-8 { top: -100px; left: 28%; transform: rotate(140deg) scale(0.85); z-index: 3; }
+.flor-top-9 { top: -110px; left: 50%; transform: rotate(180deg) scale(0.8); z-index: 2; } /* Centro exacto */
+
+.flor-top-10 { top: -110px; right: 50%; transform: scaleX(-1) rotate(180deg) scale(0.8); z-index: 3; }
+.flor-top-11 { top: -100px; right: 28%; transform: scaleX(-1) rotate(140deg) scale(0.85); z-index: 3; }
+.flor-top-12 { top: -90px; right: -10px; transform: scaleX(-1) rotate(110deg) scale(0.9); z-index: 2; }
+
+/* Laterales */
+.flor-mid-left { top: 35%; left: -100px; transform: rotate(90deg) scale(0.7); }
+.flor-mid-right { top: 45%; right: -100px; transform: rotate(-90deg) scale(0.7); }
+
+/* Construyendo el marco abajo */
+.flor-bot-1 { bottom: -60px; left: -60px; transform: rotate(45deg) scale(1.15); }
+.flor-bot-2 { bottom: -90px; left: 20%; transform: rotate(20deg) scale(0.8); }
+.flor-bot-3 { bottom: -90px; right: 20%; transform: rotate(-20deg) scale(0.85); }
+.flor-bot-4 { bottom: -60px; right: -60px; transform: rotate(-45deg) scale(1.15); }
+
+/* Mariposas */
+.mariposa {
+  position: absolute;
+  width: 50px;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4));
+  animation: floatButterfly 6s ease-in-out infinite;
+}
+
+.mariposa-left {
+  top: 20%;
+  left: 10%;
+  transform: rotate(15deg);
+}
+
+.mariposa-right {
+  bottom: 25%;
+  right: 12%;
+  transform: rotate(-25deg);
+}
+
+@keyframes floatButterfly {
+  0%, 100% { transform: translateY(0) rotate(15deg) scale(1); }
+  50% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
+}
+
 /* ─── SECTION 2: DETAILS ─── */
 #details {
   display: flex;
@@ -378,9 +450,9 @@ body::before {
   font-size: 0.6rem;
   letter-spacing: 0.5em;
   text-transform: uppercase;
-  color: var(--text-soft);
+  color: var(--gold);
   margin-bottom: 1.2rem;
-  font-weight: 200;
+  font-weight: 300;
 }
 
 .countdown-grid {
@@ -397,7 +469,7 @@ body::before {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(2rem, 5vw, 2.8rem);
   font-weight: 300;
-  color: var(--purple-dark);
+  color: white;
   line-height: 1;
   display: block;
   min-width: 2.5ch;

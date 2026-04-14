@@ -19,8 +19,8 @@
       <div class="welcome-gate-title">Bienvenido a mi invitación</div>
       <p class="welcome-gate-text">Por favor ingresa tu nombre completo para acceder a la invitación.</p>
       <div class="welcome-gate-form">
-        <input type="text" id="gate-name-input" class="gate-input"
-          placeholder="Tu nombre completo..." autocomplete="name">
+        <input type="text" id="gate-name-input" class="gate-input" placeholder="Tu nombre completo..."
+          autocomplete="name">
         <p id="gate-error" style="display:none;color:#ff6b6b;font-size:0.75rem;margin-bottom:0.1rem;font-style:italic;">
           Debes ingresar tu nombre.</p>
         <button type="button" class="gate-btn" onclick="RSVPModule.unlockInvitation()">Abrir Invitación</button>
@@ -35,7 +35,7 @@
       <img src="decor/flor.png" class="flor flor-top-2" alt="">
       <img src="decor/flor.png" class="flor flor-top-3" alt="">
       <img src="decor/flor.png" class="flor flor-top-4" alt="">
-      
+
       <img src="decor/flor.png" class="flor flor-top-5" alt="">
       <img src="decor/flor.png" class="flor flor-top-6" alt="">
       <img src="decor/flor.png" class="flor flor-top-7" alt="">
@@ -59,7 +59,7 @@
       <img src="decor/flor.png" class="flor flor-bot-right-2" alt="">
       <img src="decor/flor.png" class="flor flor-bot-right-3" alt="">
     </div>
-    
+
     <img src="decor/mariposas.png" class="mariposa mariposa-left" alt="">
     <img src="decor/mariposas.png" class="mariposa mariposa-right" alt="">
   </div>
@@ -192,7 +192,8 @@
           style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;color:rgba(255, 255, 255, 0.85);margin-bottom:1.5rem;font-weight:300;line-height:1.7;text-align:center;">
           tienen el honor de invitarle a celebrar<br>los quince años de su preciosa hija
         </p>
-        <p style="font-family:'Great Vibes',cursive;font-size:2.8rem;color:white;margin-bottom:3rem;text-align:center;">Maria José</p>
+        <p style="font-family:'Great Vibes',cursive;font-size:2.8rem;color:white;margin-bottom:3rem;text-align:center;">
+          Maria José</p>
 
         <!-- Linetime style Date & Location -->
         <div class="linetime">
@@ -207,14 +208,18 @@
             <div class="linetime-icon">🕐</div>
             <div class="linetime-content">
               <div class="linetime-label">La Hora</div>
-              <div class="linetime-value">7:00 PM <span style="font-size:0.7em;color:rgba(255,255,255,0.6);font-weight:300;">(Puntualidad apreciada)</span></div>
+              <div class="linetime-value">7:00 PM <span
+                  style="font-size:0.7em;color:rgba(255,255,255,0.6);font-weight:300;">(Puntualidad apreciada)</span>
+              </div>
             </div>
           </div>
           <div class="linetime-item last">
             <div class="linetime-icon">📍</div>
             <div class="linetime-content">
               <div class="linetime-label">El Lugar</div>
-              <div class="linetime-value">Salón Versailles<br><span style="font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:300;">Calle 45 #23-10, La Jagua</span></div>
+              <div class="linetime-value">Salón Versailles<br><span
+                  style="font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:300;">Calle 45 #23-10, La Jagua</span>
+              </div>
             </div>
           </div>
         </div>
@@ -280,9 +285,12 @@
 
         <!-- Elegantly styled dress code -->
         <div class="dresscode-block" style="text-align:center;margin-top:4rem;margin-bottom:2rem;">
-          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:white;font-weight:600;margin-bottom:0.5rem">Código de Vestimenta</h3>
-          <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--gold-light);margin-top:0.8rem;">
-            Color reservado: Azul Rey
+          <h3
+            style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:white;font-weight:600;margin-bottom:0.5rem">
+            Código de Vestimenta</h3>
+          <p
+            style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--gold-light);margin-top:0.8rem;">
+            Color reservado: Azul
           </p>
         </div>
 
@@ -357,15 +365,22 @@
           </div>
 
           <!-- State 3: Companions Form (new flow for YES) -->
-          <div id="rsvp-companions-form" style="display:none; transition:opacity 0.4s ease; opacity:0; text-align:center;">
-             <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:white;margin-bottom:0.8rem">Serás bienvenido, <strong id="final-rsvp-name-display" style="color:var(--gold-light)"></strong>.</p>
-             <div style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:1.2rem; border-radius:4px; margin-bottom:1.2rem">
-               <label style="display:block; font-family:'Jost',sans-serif; color:rgba(255,255,255,0.8); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.8rem">Acompañantes adicionales:</label>
-               <input type="number" id="final-rsvp-companions" value="0" min="0" max="10" style="width:70px; background:white; color:var(--text-dark); border:none; padding:0.6rem; text-align:center; font-size:1rem; border-radius:4px; font-weight:600">
-             </div>
-             <button id="final-rsvp-submit-btn" class="rsvp-btn-main" onclick="RSVPModule.submitCompanions()" style="width:100%">
-               Confirmar mi asistencia
-             </button>
+          <div id="rsvp-companions-form"
+            style="display:none; transition:opacity 0.4s ease; opacity:0; text-align:center;">
+            <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:white;margin-bottom:0.8rem">Serás
+              bienvenido, <strong id="final-rsvp-name-display" style="color:var(--gold-light)"></strong>.</p>
+            <div
+              style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:1.2rem; border-radius:4px; margin-bottom:1.2rem">
+              <label
+                style="display:block; font-family:'Jost',sans-serif; color:rgba(255,255,255,0.8); font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.8rem">Acompañantes
+                adicionales:</label>
+              <input type="number" id="final-rsvp-companions" value="0" min="0" max="10"
+                style="width:70px; background:white; color:var(--text-dark); border:none; padding:0.6rem; text-align:center; font-size:1rem; border-radius:4px; font-weight:600">
+            </div>
+            <button id="final-rsvp-submit-btn" class="rsvp-btn-main" onclick="RSVPModule.submitCompanions()"
+              style="width:100%">
+              Confirmar mi asistencia
+            </button>
           </div>
 
           <!-- State 2: Confirmation -->

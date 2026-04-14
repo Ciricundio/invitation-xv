@@ -65,12 +65,14 @@ const AdminModule = (function () {
 
     // Summary counters
     const total     = list.length;
-    const attending = list.filter(r => r.attending).length;
-    const notAttend = total - attending;
+    const attendingCount = list.filter(r => r.attending).length;
+    const totalCompanions = list.filter(r => r.attending).reduce((sum, r) => sum + (r.companions || 0), 0);
+    const notAttend = total - attendingCount;
 
-    document.getElementById('admin-total').textContent    = total;
-    document.getElementById('admin-attending').textContent = attending;
-    document.getElementById('admin-absent').textContent   = notAttend;
+    document.getElementById('admin-total-persons').textContent = attendingCount + totalCompanions;
+    document.getElementById('admin-attending').textContent = attendingCount;
+    document.getElementById('admin-companions').textContent = totalCompanions;
+    document.getElementById('admin-absent').textContent = notAttend;
 
     // Table body
     if (!tbody) return;

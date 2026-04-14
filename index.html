@@ -19,12 +19,11 @@
       <div class="welcome-gate-title">Bienvenido a mi invitación</div>
       <p class="welcome-gate-text">Por favor ingresa tu nombre completo para acceder a la invitación.</p>
       <div class="welcome-gate-form">
-        <input type="text" id="gate-name-input" class="inline-rsvp-name-input" style="text-align:center;"
-          placeholder="Tu nombre..." autocomplete="name">
-        <p id="gate-error" style="display:none;color:#ff6b6b;font-size:0.75rem;margin-bottom:0.8rem;font-style:italic;">
+        <input type="text" id="gate-name-input" class="gate-input"
+          placeholder="Tu nombre completo..." autocomplete="name">
+        <p id="gate-error" style="display:none;color:#ff6b6b;font-size:0.75rem;margin-bottom:0.1rem;font-style:italic;">
           Debes ingresar tu nombre.</p>
-        <button type="button" class="inline-rsvp-submit" onclick="RSVPModule.unlockInvitation()">✦ Abrir Invitación
-          ✦</button>
+        <button type="button" class="gate-btn" onclick="RSVPModule.unlockInvitation()">Abrir Invitación</button>
       </div>
     </div>
   </div>

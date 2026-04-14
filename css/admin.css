@@ -87,7 +87,7 @@ body {
 .admin-header-name {
   font-family: 'Great Vibes', cursive;
   font-size: 1.1rem;
-  color: var(--purple);
+  color: var(--white);
 }
 
 .admin-header-actions {
